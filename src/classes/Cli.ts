@@ -98,11 +98,6 @@ class Cli {
           name: 'topSpeed',
           message: 'Enter Top Speed',
         },
-        {
-          type: 'input',
-          name: 'towingCapacity',
-          message: 'Enter Towing Capacity',
-        }
       ])
       .then((answers) => {
         let vehicle: Car | Truck | Motorbike;
@@ -258,7 +253,7 @@ class Cli {
       });
   }
 // add parameter to accpet truck object
-  findVehicleToTow(): void {
+  findVehicleToTow(truck: Truck): void {
     inquirer
       .prompt([
         {
@@ -286,7 +281,7 @@ class Cli {
       towVehicle(vehicle: Car | Truck | Motorbike): void {
         console.log(`Vehicle with VIN ${vehicle.vin} and weight ${vehicle.weight} kg is being towed.`);
         // Add towing logic here
-      }
+      } 
       
 
 // add else if statement to run wheelie method and tow method
@@ -369,6 +364,31 @@ class Cli {
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
               this.vehicles[i].reverse();
+            }
+          }
+        } else if (answers.action === 'Tow') {
+          // find the selected vehicle and tow it
+          for (let i = 0; i < this.vehicles.length; i++) {
+            if (this.vehicles[i].vin === this.selectedVehicleVin) {
+              // call the findVehicleToTow method to find a vehicle to tow
+              if (this.vehicles[i] instanceof Truck) {
+                this.findVehicleToTow(this.vehicles[i] as Truck);
+                return;
+              } else {
+                console.log('Only trucks can tow vehicles.');
+              }
+            }
+          }
+        } else if (answers.action === 'Wheelie') { 
+          // find the selected vehicle and perform a wheelie
+          for (let i = 0; i < this.vehicles.length; i++) {
+            if (this.vehicles[i].vin === this.selectedVehicleVin) {
+              // call the wheelie method to perform a wheelie
+              if (this.vehicles[i] instanceof Motorbike) {
+                (this.vehicles[i] as Motorbike).wheelie();
+              } else {
+                console.log('Only motorbikes can perform a wheelie.');
+              }
             }
           }
         }
